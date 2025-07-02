@@ -1,0 +1,6 @@
+/Users/elian/Documents/MCUXpresso/Workspace/wifi_webconfig/wifi/wifidriver/incl/mlan_main.h:3055:22:wlan_get_priv_by_id	32	static
+/Users/elian/Documents/MCUXpresso/Workspace/wifi_webconfig/wifi/wifidriver/incl/mlan_main.h:3082:22:wlan_get_priv	24	static
+/Users/elian/Documents/MCUXpresso/Workspace/wifi_webconfig/wifi/incl/port/net/wm_net.h:392:20:net_stack_buffer_free	16	static
+/Users/elian/Documents/MCUXpresso/Workspace/wifi_webconfig/wifi/incl/port/net/wm_net.h:410:19:net_stack_buffer_copy_partial	24	static
+../wifi/wifidriver/mlan_txrx.c:54:13:wlan_handle_rx_packet	32	static
+../wifi/wifidriver/mlan_txrx.c:92:13:wlan_process_uap_rx_packet	56	static

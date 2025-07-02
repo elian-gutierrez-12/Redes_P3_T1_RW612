@@ -1,0 +1,3 @@
+/Users/elian/Documents/MCUXpresso/Workspace/wifi_webconfig/drivers/fsl_io_mux.h:1579:20:IO_MUX_SetPinMux	32	static
+../source/pin_mux.c:18:6:BOARD_InitBootPins	8	static
+../source/pin_mux.c:29:6:BOARD_InitPins	32	static

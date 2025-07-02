@@ -1,0 +1,10 @@
+/Users/elian/Documents/MCUXpresso/Workspace/wifi_webconfig/wifi/wifidriver/incl/mlan_main.h:2986:14:wlan_strlen	24	static
+../wifi/wifidriver/mlan_join.c:56:12:wlan_cmd_append_generic_ie	24	static
+../wifi/wifidriver/mlan_join.c:125:20:wlan_get_common_rates	56	static
+../wifi/wifidriver/mlan_join.c:263:13:wlan_setup_rates_from_bssdesc	56	static
+../wifi/wifidriver/mlan_join.c:308:12:wlan_update_rsn_ie	128	static
+../wifi/wifidriver/mlan_join.c:802:13:wlan_cmd_802_11_associate	136	static
+../wifi/wifidriver/mlan_join.c:1275:13:wlan_ret_802_11_associate	56	static
+../wifi/wifidriver/mlan_join.c:1488:13:wlan_associate	48	static
+../wifi/wifidriver/mlan_join.c:1528:6:wlan_band_to_radio_type	24	static
+../wifi/wifidriver/mlan_join.c:1553:6:wlan_use_non_default_ht_vht_cap	16	static

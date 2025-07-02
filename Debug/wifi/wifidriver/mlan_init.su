@@ -1,0 +1,10 @@
+/Users/elian/Documents/MCUXpresso/Workspace/wifi_webconfig/wifi/wifidriver/incl/mlan_util.h:51:22:util_init_list	16	static
+/Users/elian/Documents/MCUXpresso/Workspace/wifi_webconfig/wifi/wifidriver/incl/mlan_util.h:66:22:util_init_list_head	24	static
+/Users/elian/Documents/MCUXpresso/Workspace/wifi_webconfig/wifi/wifidriver/incl/mlan_util.h:302:22:util_scalar_init	24	static
+../wifi/wifidriver/mlan_init.c:74:13:wlan_allocate_adapter	16	static
+../wifi/wifidriver/mlan_init.c:100:6:wlan_clear_scan_bss	8	static
+../wifi/wifidriver/mlan_init.c:126:13:wlan_init_priv	24	static
+../wifi/wifidriver/mlan_init.c:265:8:wlan_init_adapter	16	static
+../wifi/wifidriver/mlan_init.c:405:13:wlan_init_lock_list	40	static
+../wifi/wifidriver/mlan_init.c:506:13:wlan_init_fw	32	static
+../wifi/wifidriver/mlan_init.c:546:8:wlan_free_adapter	16	static
