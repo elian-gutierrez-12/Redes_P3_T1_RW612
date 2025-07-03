@@ -33,8 +33,15 @@
 #endif
 #define APP_THREAD_STACKSIZE 1024
 #define APP_THREAD_PRIO      DEFAULT_THREAD_PRIO
-#define STEP_DELAY_MS         10    /* ms between each level step */
+#define STEP_DELAY_MS        100    /* ms between each level step */
 #define OFF_DELAY_MS        5000    /* ms before starting increase */
+
+/* MQTT topics */
+#define TANK_ALARM "tank/alarm"
+#define TANK_AVAILABILITY "tank/availability"
+#define TANK_FILL_STATE "tank/fill_state"
+#define TANK_OXYGEN_LEVEL "tank/oxygen_level"
+#define TANK_OXYGEN_REQUEST "tank/oxygen_request"
 
 /*******************************************************************************
  * Prototypes
@@ -73,7 +80,7 @@ static const struct mqtt_connect_client_info_t mqtt_client_info = {
     .client_user = NULL,
     .client_pass = NULL,
     .keep_alive  = 100,
-    .will_topic  = "tank/availability",
+    .will_topic  = TANK_AVAILABILITY,
     .will_msg    = "OFFLINE",
     .will_qos    = 1,
     .will_retain = 1,
@@ -93,11 +100,11 @@ static void publish_availability(void *ctx)
     mqtt_client_t *client = (mqtt_client_t*)ctx;
     PRINTF("DBG: tank/availability=ONLINE\r\n");
     mqtt_publish(client,
-                 "tank/availability",
+                 TANK_AVAILABILITY,
                  "ONLINE", strlen("ONLINE"),
                  1, 1,
                  mqtt_message_published_cb,
-                 (void*)"tank/availability");
+                 (void*)TANK_AVAILABILITY);
     /* Immediately publish initial STABLE state */
     publish_change(client);
 }
@@ -111,11 +118,11 @@ static void publish_change(mqtt_client_t *client)
         int l = snprintf(pl, sizeof(pl), "%d", oxygen_level);
         PRINTF("DBG: tank/oxygen_level=%d%%\r\n", oxygen_level);
         mqtt_publish(client,
-                     "tank/oxygen_level",
+                     TANK_OXYGEN_LEVEL,
                      pl, l,
                      1, 1,
                      mqtt_message_published_cb,
-                     (void*)"tank/oxygen_level");
+                     (void*)TANK_OXYGEN_LEVEL);
     }
 
     /* state */
@@ -128,11 +135,11 @@ static void publish_change(mqtt_client_t *client)
     if (!prev_state || strcmp(state, prev_state) != 0) {
         PRINTF("DBG: tank/fill_state=%s\r\n", state);
         mqtt_publish(client,
-                     "tank/fill_state",
+                     TANK_FILL_STATE,
                      state, strlen(state),
                      1, 1,
                      mqtt_message_published_cb,
-                     (void*)"tank/fill_state");
+                     (void*)TANK_FILL_STATE);
         prev_state = state;
     }
 
@@ -179,9 +186,9 @@ static void mqtt_incoming_publish_cb(void *arg, const char *topic, u32_t tot_len
     LWIP_UNUSED_ARG(arg);
     LWIP_UNUSED_ARG(tot_len);
     PRINTF("DBG: Incoming publish for '%s'\r\n", topic);
-    if      (strcmp(topic, "tank/oxygen_request") == 0) current_sub = SUB_REQUEST;
-    else if (strcmp(topic, "tank/alarm")          == 0) current_sub = SUB_ALARM;
-    else                                               current_sub = SUB_NONE;
+    if      (strcmp(topic, TANK_OXYGEN_REQUEST) == 0) current_sub = SUB_REQUEST;
+    else if (strcmp(topic, TANK_ALARM)          == 0) current_sub = SUB_ALARM;
+    else                                             current_sub = SUB_NONE;
 }
 
 /* Handle full payload */
@@ -192,7 +199,7 @@ static void mqtt_incoming_data_cb(void *arg, const u8_t *data, u16_t len, u8_t f
 
     char buf[16] = {0};
     memcpy(buf, data, len>15?15:len);
-    const char *topic = (current_sub==SUB_REQUEST) ? "tank/oxygen_request" : "tank/alarm";
+    const char *topic = (current_sub==SUB_REQUEST) ? TANK_OXYGEN_REQUEST : TANK_ALARM;
     PRINTF("DBG: Received on '%s': '%s'\r\n", topic, buf);
 
     if (current_sub == SUB_REQUEST)
@@ -211,11 +218,11 @@ static void mqtt_incoming_data_cb(void *arg, const u8_t *data, u16_t len, u8_t f
             /* OFF: publish STABLE, then after delay start increase */
             PRINTF("DBG: tank/fill_state=STABLE\r\n");
             mqtt_publish(client,
-                         "tank/fill_state",
+                         TANK_FILL_STATE,
                          "STABLE", strlen("STABLE"),
                          1, 1,
                          mqtt_message_published_cb,
-                         (void*)"tank/fill_state");
+                         (void*)TANK_FILL_STATE);
             sys_untimeout(oxygen_decrease_step, client);
             sys_timeout(OFF_DELAY_MS, oxygen_increase_step, client);
         }
@@ -230,11 +237,11 @@ static void mqtt_incoming_data_cb(void *arg, const u8_t *data, u16_t len, u8_t f
             sys_untimeout(oxygen_increase_step, client);
             PRINTF("DBG: tank/fill_state=STABLE\r\n");
             mqtt_publish(client,
-                         "tank/fill_state",
+                         TANK_FILL_STATE,
                          "STABLE", strlen("STABLE"),
                          1, 1,
                          mqtt_message_published_cb,
-                         (void*)"tank/fill_state");
+                         (void*)TANK_FILL_STATE);
         }
         else if (fill_request)
         {
@@ -262,7 +269,7 @@ static void mqtt_subscribe_topics(mqtt_client_t *client)
                             mqtt_incoming_publish_cb,
                             mqtt_incoming_data_cb,
                             client);
-    const char *topics[] = { "tank/oxygen_request", "tank/alarm" };
+    const char *topics[] = { TANK_OXYGEN_REQUEST, TANK_ALARM };
     int qos[] = { 1, 1 };
     for (int i = 0; i < 2; i++) {
         mqtt_subscribe(client,

@@ -394,7 +394,7 @@ static void main_task(void *arg)
 
     result = get_saved_wifi_credentials(CONNECTION_INFO_FILENAME, ssid, password, security);
 
-    if (result == 2 && strcmp(ssid, "") != 0)
+    if (result == 0 && strcmp(ssid, "") != 0)
     {
         /* Credentials from last time have been found. The board will attempt to
          * connect to this network as a client */
